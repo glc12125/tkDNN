@@ -5,7 +5,7 @@
 
 #include "DetectionNN.h"
 
-namespace tk { namespace dnn { 
+namespace tk { namespace dnn {
 
 class Yolo3Detection : public DetectionNN
 {
@@ -19,10 +19,16 @@ private:
     tk::dnn::Yolo* getYoloLayer(int n=0);
 
     cv::Mat bgr_h;
-    
+
 public:
     Yolo3Detection() {};
-    ~Yolo3Detection() {}; 
+    Yolo3Detection(const std::string& detectionLabelsPath) {
+        _detectionFile.open(detectionLabelsPath);
+        _detectionFile << "image_name,cls,xtl,ytl,xbr,ybr\n";
+    };
+    ~Yolo3Detection() {
+        _detectionFile.close();
+    };
 
     bool init(const std::string& tensor_path, const int n_classes=80, const int n_batches=1);
     void preprocess(cv::Mat &frame, const int bi=0);

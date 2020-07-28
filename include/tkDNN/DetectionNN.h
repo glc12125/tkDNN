@@ -2,6 +2,7 @@
 #define DETECTIONNN_H
 
 #include <iostream>
+#include <fstream>
 #include <signal.h>
 #include <stdlib.h>    
 #include <unistd.h>
@@ -44,6 +45,8 @@ class DetectionNN {
         cv::Mat imagePreproc;
         dnnType *input;
 #endif
+
+        std::ofstream _detectionFile;
 
         /**
          * This method preprocess the image, before feeding it to the NN.
@@ -145,7 +148,7 @@ class DetectionNN {
          * 
          * @param frames orginal frame to draw bounding box on.
          */
-        void draw(std::vector<cv::Mat>& frames) {
+        void draw(std::vector<cv::Mat>& frames, const std::string& imageName = "") {
             tk::dnn::box b;
             int x0, w, x1, y0, h, y1;
             int objClass;
@@ -172,6 +175,9 @@ class DetectionNN {
                     cv::Size text_size = getTextSize(det_class, cv::FONT_HERSHEY_SIMPLEX, font_scale, thickness, &baseline);
                     cv::rectangle(frames[bi], cv::Point(x0, y0), cv::Point((x0 + text_size.width - 2), (y0 - text_size.height - 2)), colors[b.cl], -1);                      
                     cv::putText(frames[bi], det_class, cv::Point(x0, (y0 - (baseline / 2))), cv::FONT_HERSHEY_SIMPLEX, font_scale, cv::Scalar(255, 255, 255), thickness);
+                    if(!imageName.empty() && _detectionFile.is_open()) {
+                        _detectionFile << imageName << "," << det_class << "," << x0 << "," << y0 << "," << x1 << "," << y1 << "\n";
+                    }
                 }
             }
         }

@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     if(!show)
         SAVE_RESULT = true;
 
-    tk::dnn::Yolo3Detection yolo;
+    tk::dnn::Yolo3Detection yolo("../demo/kitti_test/detection_labels.csv");
     tk::dnn::CenternetDetection cnet;
     tk::dnn::MobilenetDetection mbnet;  
 
@@ -112,15 +112,19 @@ int main(int argc, char *argv[]) {
             int h = frame.rows;
             resultVideo.open("result.mp4", cv::VideoWriter::fourcc('M','P','4','V'), 30, cv::Size(w, h));
         }
+        std::size_t found = fn[k].find_last_of("/\\");
+        std::string fileName = fn[k].substr(found+1);
+
         //inference
         detNN->update(batch_dnn_input, n_batch);
-        detNN->draw(batch_frame);
+        found = fileName.find_last_of(".");
+        std::string fileNameWithoutExt = fileName.substr(0, found);
+        detNN->draw(batch_frame, fileNameWithoutExt);
 
         if(show){
             for(int bi=0; bi< n_batch; ++bi){
                 cv::imshow("detection", batch_frame[bi]);
-                std::size_t found = fn[k].find_last_of("/\\");
-                cv::imwrite(input + "/detection/" + fn[k].substr(found+1), batch_frame[bi]);
+                cv::imwrite(input + "/detection/" + fileName, batch_frame[bi]);
                 cv::waitKey(1);
             }
         }
