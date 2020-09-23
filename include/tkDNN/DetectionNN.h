@@ -23,6 +23,17 @@
 #endif
 
 
+namespace RoboK {
+    struct DetectionResult2D{
+        int _minX;
+        int _minY;
+        int _maxX;
+        int _maxY;
+        std::string _detClass;
+        cv::Scalar _color;
+    };
+}
+
 namespace tk { namespace dnn {
 
 class DetectionNN {
@@ -182,6 +193,29 @@ class DetectionNN {
             }
         }
 
+        std::vector<RoboK::DetectionResult2D> getDetection() {
+            std::vector<RoboK::DetectionResult2D> results;
+            if(batchDetected.size() == 0 || batchDetected[0].size() == 0) {
+                return results;
+            }
+
+            tk::dnn::box b;
+            for(int i=0; i<batchDetected[0].size(); i++) { 
+                b = batchDetected[0][i];
+                RoboK::DetectionResult2D result;
+                result._minX = b.x;
+                result._minY = b.y;
+                result._maxX = b.x + b.w;
+                result._maxY = b.y + b.h;
+                result._detClass = classesNames[b.cl];
+                result._color = colors[b.cl];
+
+                results.push_back(result);
+            }
+
+            return results;
+
+        }
 };
 
 }}

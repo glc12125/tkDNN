@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     cv::String path(input+"/*.png"); //select only jpg
     std::vector<cv::String> fn;
     std::vector<cv::Mat> data;
-    cv::glob(path,fn,true); // recurse
+    cv::glob(path,fn,false); // recurse
 
     for (size_t k=0; k<fn.size(); ++k)
     {
@@ -119,12 +119,13 @@ int main(int argc, char *argv[]) {
         detNN->update(batch_dnn_input, n_batch);
         found = fileName.find_last_of(".");
         std::string fileNameWithoutExt = fileName.substr(0, found);
-        detNN->draw(batch_frame, fileNameWithoutExt);
+        //detNN->draw(batch_frame, fileNameWithoutExt);
+        detNN->draw(batch_frame);
 
         if(show){
             for(int bi=0; bi< n_batch; ++bi){
                 cv::imshow("detection", batch_frame[bi]);
-                cv::imwrite(input + "/detection/" + fileName, batch_frame[bi]);
+                //cv::imwrite(input + "/detection/" + fileName, batch_frame[bi]);
                 cv::waitKey(1);
             }
         }
