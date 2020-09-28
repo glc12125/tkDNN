@@ -36,7 +36,7 @@ cuda_add_library(kernels SHARED ${tkdnn_CUSRC})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-find_package(OpenCV 4.4.0 EXACT REQUIRED PATHS /home/liangchuan/Development/libs/lib/cmake/opencv4/ NO_DEFAULT_PATH)
+find_package(OpenCV 4.4.0 EXACT REQUIRED PATHS ${WORKING_SPACE}/libs/lib/cmake/opencv4/ NO_DEFAULT_PATH)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCV")
 
 # gives problems in cross-compiling, probably malformed cmake config
