@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
     std::vector<cv::Mat> batch_frame;
     std::vector<cv::Mat> batch_dnn_input;
 
-    cv::String path(input+"/*.png"); //select only jpg
+    cv::String path(input+"/*.jpg"); //select only jpg
     std::vector<cv::String> fn;
     std::vector<cv::Mat> data;
     cv::glob(path,fn,false); // recurse

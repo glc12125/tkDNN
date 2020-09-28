@@ -36,7 +36,7 @@ cuda_add_library(kernels SHARED ${tkdnn_CUSRC})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 4.4.0 EXACT REQUIRED PATHS /home/liangchuan/Development/libs/lib/cmake/opencv4/ NO_DEFAULT_PATH)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOPENCV")
 
 # gives problems in cross-compiling, probably malformed cmake config
@@ -49,11 +49,17 @@ file(GLOB tkdnn_SRC "src/*.cpp")
 set(tkdnn_LIBS kernels ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES} ${CUDNN_LIBRARIES} ${OpenCV_LIBS} yaml-cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${CUDA_INCLUDE_DIRS} ${OPENCV_INCLUDE_DIRS} ${NVINFER_INCLUDES})
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/../Onboard/utils
+	${CUDA_INCLUDE_DIRS}
+	${OPENCV_INCLUDE_DIRS}
+	${NVINFER_INCLUDES}
+)
 add_library(tkDNN SHARED ${tkdnn_SRC})
 target_link_libraries(tkDNN ${tkdnn_LIBS})
 
-#static 
+#static
 #add_library(tkDNN_static STATIC ${tkdnn_SRC})
 #target_link_libraries(tkDNN_static ${tkdnn_LIBS})
 
@@ -120,7 +126,7 @@ target_link_libraries(demo_images tkDNN)
 # Install
 #-------------------------------------------------------------------------------
 #if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-#    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" 
+#    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install"
 #         CACHE PATH "default install path" FORCE)
 #endif()
 message("install dir:" ${CMAKE_INSTALL_PREFIX})

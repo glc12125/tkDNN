@@ -14,6 +14,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "tkdnn.h"
+#include <DetectionResult2D.h>
 
 // #define OPENCV_CUDACONTRIB //if OPENCV has been compiled with CUDA and contrib.
 
@@ -22,17 +23,6 @@
 #include <opencv2/cudaarithm.hpp>
 #endif
 
-
-namespace RoboK {
-    struct DetectionResult2D{
-        int _minX;
-        int _minY;
-        int _maxX;
-        int _maxY;
-        std::string _detClass;
-        cv::Scalar _color;
-    };
-}
 
 namespace tk { namespace dnn {
 
@@ -207,6 +197,7 @@ class DetectionNN {
                 result._minY = b.y;
                 result._maxX = b.x + b.w;
                 result._maxY = b.y + b.h;
+                result._prob = b.prob;
                 result._detClass = classesNames[b.cl];
                 result._color = colors[b.cl];
 
